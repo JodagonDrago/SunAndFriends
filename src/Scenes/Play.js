@@ -5,8 +5,9 @@ class Play extends Phaser.Scene{
 
     preload() {
         // load images/tile sprites
-        this.load.image('sun', './assets/rocket.png'); //this will need to be changed when the sun asset is made
+        this.load.image('sun', './assets/sun.png'); //this will need to be changed when the sun asset is made
         this.load.image('asteroid', './assets/asteroid.png');
+        this.load.image('stardust', './assets/stardust.png');
         this.load.image('starfield', './assets/starfield.png');
 
         // load spritesheet
@@ -30,7 +31,10 @@ class Play extends Phaser.Scene{
         this.asteroid01 = new Asteroid(this, game.config.width + borderUISize*6, borderUISize*4, 'asteroid', 0, 30).setOrigin(0, 0);
         this.asteroid02 = new Asteroid(this, game.config.width + borderUISize*3, borderUISize*5 + borderPadding*2, 'asteroid', 0, 20).setOrigin(0,0);
         this.asteroid03 = new Asteroid(this, game.config.width, borderUISize*6 + borderPadding*4, 'asteroid', 0, 10).setOrigin(0,0);
-    
+        
+        // Add stardust FIXME
+        this.stardust01 = new Stardust(this, game.config.width + borderUISize*3, borderUISize*5 + borderPadding*2, 'stardust', 0, 20).setOrigin(0,0);
+
         // define keys
         keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
@@ -96,20 +100,26 @@ class Play extends Phaser.Scene{
             this.asteroid01.update();
             this.asteroid02.update();
             this.asteroid03.update();
+            // Update stardust
+            this.stardust01.update();
         }
 
-        // check collisions
+        // check collisions for asteroids
         if(this.checkCollision(this.p1Rocket, this.asteroid03)) {
-            this.asteroidExplode(this.asteroid03);
-            life -= 1;
+            this.hitAsteroid(this.asteroid03);
         }
         if (this.checkCollision(this.p1Rocket, this.asteroid02)) {
-            this.asteroidExplode(this.asteroid02);
-            life -= 1;
+            this.hitAsteroid(this.asteroid02);
         }
         if (this.checkCollision(this.p1Rocket, this.asteroid01)) {
-            this.asteroidExplode(this.asteroid01);
-            life -= 1;
+            this.hitAsteroid(this.asteroid01);
+        }
+
+        // Check collisions for stardust
+        if (this.checkCollision(this.p1Rocket, this.stardust01)) {
+            this.collectStardust(this.stardust01);
+            console.log("gathered dust");
+            console.log(life);
         }
     }
 
@@ -140,6 +150,19 @@ class Play extends Phaser.Scene{
         this.p1Score += asteroid.points;
         this.scoreLeft.text = this.p1Score;
         this.sound.play('sfx_explosion'); 
+      }
 
+      hitAsteroid(asteroid) {
+        asteroid.alpha = 0;
+        asteroid.reset();
+        asteroid.alpha = 1;
+        life -= 1;
+      }
+
+      collectStardust(stardust) {
+          stardust.alpha = 0;
+          stardust.reset();
+          stardust.alpha = 1;
+          life += 1;
       }
 }
