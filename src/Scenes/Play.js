@@ -6,7 +6,7 @@ class Play extends Phaser.Scene{
     preload() {
         // load images/tile sprites
         this.load.image('sun', './assets/rocket.png'); //this will need to be changed when the sun asset is made
-        this.load.image('spaceship', './assets/spaceship.png');
+        this.load.image('asteroid', './assets/asteroid.png');
         this.load.image('starfield', './assets/starfield.png');
 
         // load spritesheet
@@ -26,10 +26,10 @@ class Play extends Phaser.Scene{
         // add rocket (p1)
         this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height/2, 'sun').setOrigin(0.5, 0);
 
-        //add spaceships (x3)
-        this.ship01 = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*4, 'spaceship', 0, 30).setOrigin(0, 0);
-        this.ship02 = new Spaceship(this, game.config.width + borderUISize*3, borderUISize*5 + borderPadding*2, 'spaceship', 0, 20).setOrigin(0,0);
-        this.ship03 = new Spaceship(this, game.config.width, borderUISize*6 + borderPadding*4, 'spaceship', 0, 10).setOrigin(0,0);
+        //add asteroids (x3)
+        this.asteroid01 = new Asteroid(this, game.config.width + borderUISize*6, borderUISize*4, 'asteroid', 0, 30).setOrigin(0, 0);
+        this.asteroid02 = new Asteroid(this, game.config.width + borderUISize*3, borderUISize*5 + borderPadding*2, 'asteroid', 0, 20).setOrigin(0,0);
+        this.asteroid03 = new Asteroid(this, game.config.width, borderUISize*6 + borderPadding*4, 'asteroid', 0, 10).setOrigin(0,0);
     
         // define keys
         keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
@@ -92,52 +92,52 @@ class Play extends Phaser.Scene{
         if (!this.gameOver){
             // update rocket sprite
             this.p1Rocket.update();
-            // update spaceships (x3)
-            this.ship01.update();
-            this.ship02.update();
-            this.ship03.update();
+            // update asteroids (x3)
+            this.asteroid01.update();
+            this.asteroid02.update();
+            this.asteroid03.update();
         }
 
         // check collisions
-        if(this.checkCollision(this.p1Rocket, this.ship03)) {
-            this.shipExplode(this.ship03);
+        if(this.checkCollision(this.p1Rocket, this.asteroid03)) {
+            this.asteroidExplode(this.asteroid03);
             life -= 1;
         }
-        if (this.checkCollision(this.p1Rocket, this.ship02)) {
-            this.shipExplode(this.ship02);
+        if (this.checkCollision(this.p1Rocket, this.asteroid02)) {
+            this.asteroidExplode(this.asteroid02);
             life -= 1;
         }
-        if (this.checkCollision(this.p1Rocket, this.ship01)) {
-            this.shipExplode(this.ship01);
+        if (this.checkCollision(this.p1Rocket, this.asteroid01)) {
+            this.asteroidExplode(this.asteroid01);
             life -= 1;
         }
     }
 
-    checkCollision(rocket, ship) {
+    checkCollision(rocket, asteroid) {
         // simple AABB checking
-        if (rocket.x < ship.x + ship.width && 
-            rocket.x + rocket.width > ship.x && 
-            rocket.y < ship.y + ship.height &&
-            rocket.height + rocket.y > ship. y) {
+        if (rocket.x < asteroid.x + asteroid.width && 
+            rocket.x + rocket.width > asteroid.x && 
+            rocket.y < asteroid.y + asteroid.height &&
+            rocket.height + rocket.y > asteroid. y) {
                 return true;
         } else {
             return false;
         }
     }
 
-    shipExplode(ship) {
-        // temporarily hide ship
-        ship.alpha = 0;
-        // create explosion sprite at ship's position
-        let boom = this.add.sprite(ship.x, ship.y, 'explosion').setOrigin(0, 0);
+    asteroidExplode(asteroid) {
+        // temporarily hide asteroid
+        asteroid.alpha = 0;
+        // create explosion sprite at asteroid's position
+        let boom = this.add.sprite(asteroid.x, asteroid.y, 'explosion').setOrigin(0, 0);
         boom.anims.play('explode');             // play explode animation
         boom.on('animationcomplete', () => {    // callback after anim completes
-          ship.reset();                         // reset ship position
-          ship.alpha = 1;                       // make ship visible again
+          asteroid.reset();                         // reset asteroid position
+          asteroid.alpha = 1;                       // make asteroid visible again
           boom.destroy();                       // remove explosion sprite
         });
         // score add and repaint
-        this.p1Score += ship.points;
+        this.p1Score += asteroid.points;
         this.scoreLeft.text = this.p1Score;
         this.sound.play('sfx_explosion'); 
 
