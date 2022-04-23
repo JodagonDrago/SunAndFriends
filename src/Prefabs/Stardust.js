@@ -5,22 +5,27 @@ class Stardust extends Phaser.GameObjects.Sprite{
         scene.add.existing(this); //add to existing scene
         this.points = pointValue; //store pointValue
         this.moveSpeed = game.settings.stardustSpeed; //pixels per frame
+        this.timer = 0;
     }
 
     update(){
         //move asteroid left
-        this.x -= this.moveSpeed;
+        if (this.timer >= 400){
+            this.x -= this.moveSpeed;
+        }
+        this.timer += 1;
         //wrap around from left to right
         if(this.x <= 0 - this.width){
-            this.x = game.config.width;
-            this.y = this.randomY()
+            this.reset();
         }
     }
 
     //reset position
     reset(){
-        this.x = game.config.width;
-        this.y = this.randomY()
+        this.timer = 0;
+        this.x = game.config.width + this.width;
+        this.y = this.randomY();
+
     }
 
     randomY() {

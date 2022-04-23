@@ -41,8 +41,7 @@ class Menu extends Phaser.Scene{
           // easy mode
           game.settings = {
             asteroidSpeed: 6,
-            stardustSpeed: 3,
-            gameTimer: 60000    
+            stardustSpeed: 3,  
           }
           this.sound.play('sfx_select');
           this.scene.start('playScene');    
