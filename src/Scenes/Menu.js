@@ -15,8 +15,8 @@ class Menu extends Phaser.Scene{
         let menuConfig = {
             fontFamily: 'Courier',
             fontSize: '28px',
-            backgroundColor: '#F3B141',
-            color: '#843605',
+            backgroundColor: '#5274e3',
+            color: '#000000',
             align: 'right',
             padding: {
                 top: 5,
@@ -25,8 +25,8 @@ class Menu extends Phaser.Scene{
             fixedWidth: 0
         }
 
-        this.add.text(game.config.width/2, game.config.height/2 - borderUISize - borderPadding, 'ROCKET PATROL', menuConfig).setOrigin(0.5);
-        this.add.text(game.config.width/2, game.config.height/2, 'Use ←→ arrows to move & (F) to fire', menuConfig).setOrigin(0.5);
+        this.add.text(game.config.width/2, game.config.height/2 - borderUISize - borderPadding, 'ENDLESS RUNNER', menuConfig).setOrigin(0.5);
+        this.add.text(game.config.width/2, game.config.height/2, 'Use arrow keys to move', menuConfig).setOrigin(0.5);
         menuConfig.backgroundColor = '#00FF00';
         menuConfig.color = '#000';
         this.add.text(game.config.width/2, game.config.height/2 + borderUISize + borderPadding, 'Press ← for Novice or → for Expert', menuConfig).setOrigin(0.5);
@@ -41,7 +41,7 @@ class Menu extends Phaser.Scene{
           // easy mode
           game.settings = {
             asteroidSpeed: 6,
-            gameTimer: 60000    
+            stardustSpeed: 3,  
           }
           this.sound.play('sfx_select');
           this.scene.start('playScene');    
@@ -50,6 +50,7 @@ class Menu extends Phaser.Scene{
           // hard mode
           game.settings = {
             asteroidSpeed: 8,
+            stardustSpeed: 4,
             gameTimer: 45000    
           }
           this.sound.play('sfx_select');
