@@ -9,6 +9,9 @@ class Play extends Phaser.Scene{
         this.load.image('asteroid', './assets/asteroid.png');
         this.load.image('stardust', './assets/stardust.png');
         this.load.image('starfield', './assets/starfield.png');
+        this.load.image('planet1', './assets/planet1.png');
+        this.load.image('planet2', './assets/planet2.png');
+        this.load.image('planet3', './assets/planet3.png');
 
         // load spritesheet
         this.load.spritesheet('explosion', './assets/explosion.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9});
@@ -25,7 +28,7 @@ class Play extends Phaser.Scene{
         this.add.rectangle(game.config.width - borderUISize, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0, 0);
     
         // add sun (p1)
-        this.sun = new Sun(this, game.config.width/2, game.config.height/2, 'sun').setOrigin(0.5, 0);
+        this.sun = new Sun(this, game.config.width/2, game.config.height/2, 'sun').setOrigin(0.5, 0.5);
 
         //add asteroids (x3)
         this.asteroid01 = new Asteroid(this, game.config.width + borderUISize*6, borderUISize*4, 'asteroid', 0, 30).setOrigin(0, 0);
@@ -67,8 +70,9 @@ class Play extends Phaser.Scene{
         }
         this.scoreLeft = this.add.text(borderPadding, borderPadding, this.p1Score, this.scoreConfig);
 
-        // initialize player life
+        // initialize player life and planets
         life = 1;
+        planetCount = 0;
 
         //Game Over flag
         this.gameOver  = false;
@@ -77,7 +81,7 @@ class Play extends Phaser.Scene{
 
     update() {
         // End game when life = 0. Life will go up when collecting enough dust to make a planet
-        if (life == 0){
+        if (life <= 0){
             this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', this.scoreConfig).setOrigin(0.5);
             this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart or ← for menu', this.scoreConfig).setOrigin(0.5);
             this.gameOver = true;
@@ -94,7 +98,7 @@ class Play extends Phaser.Scene{
         this.starfield.tilePositionX -= 4;
 
         if (!this.gameOver){
-            // update rocket sprite
+            // update sun sprite
             this.sun.update();
             // update asteroids (x3)
             this.asteroid01.update();
@@ -102,6 +106,16 @@ class Play extends Phaser.Scene{
             this.asteroid03.update();
             // Update stardust
             this.stardust01.update();
+            // update any planets
+            if (planetCount >= 1){
+                this.planet1.update(this.sun);
+            }
+            if (planetCount >= 2){
+                this.planet2.update(this.sun);
+            }
+            if (planetCount == 3){
+                this.planet3.update(this.sun);
+            }
         }
 
         // check collisions for asteroids
@@ -118,17 +132,18 @@ class Play extends Phaser.Scene{
         // Check collisions for stardust
         if (this.checkCollision(this.sun, this.stardust01)) {
             this.collectStardust(this.stardust01);
-            console.log("gathered dust");
-            console.log(life);
+            if (life == 6 || life == 11 || life == 16){ //determines when the planets spawn, offset by 1 because sun starts at 1 life
+                this.addPlanet();
+            }
         }
     }
 
     checkCollision(theSun, asteroid) {
         // simple AABB checking
-        if (theSun.x < asteroid.x + asteroid.width && 
-            theSun.x + theSun.width > asteroid.x && 
-            theSun.y < asteroid.y + asteroid.height &&
-            theSun.height + theSun.y > asteroid. y) {
+        if (theSun.x - theSun.width/2 < asteroid.x + asteroid.width && 
+            theSun.x + theSun.width/2 > asteroid.x && 
+            theSun.y - theSun.height/2 < asteroid.y + asteroid.height &&
+            theSun.height/2 + theSun.y > asteroid. y) {
                 return true;
         } else {
             return false;
@@ -138,6 +153,7 @@ class Play extends Phaser.Scene{
     asteroidExplode(asteroid) {
         // temporarily hide asteroid
         asteroid.alpha = 0;
+        this.sound.play('sfx_explosion');
         // create explosion sprite at asteroid's position
         let boom = this.add.sprite(asteroid.x, asteroid.y, 'explosion').setOrigin(0, 0);
         asteroid.reset();                         // reset asteroid position
@@ -148,17 +164,46 @@ class Play extends Phaser.Scene{
         });
       }
 
-      hitAsteroid(asteroid) {
+    hitAsteroid(asteroid) {
         this.asteroidExplode(asteroid);
-        life -= 1;
-      }
+        life -= 5; //damage to player (should equal increment when planets appear)
 
-      collectStardust(stardust) {
+        //kill a planet if there is one
+        if (planetCount == 1){
+            this.planet1.destroy();
+            planetCount -= 1;
+        } else if (planetCount == 2){
+            this.planet2.destroy();
+            planetCount -= 1;
+        } else if (planetCount == 3){
+            this.planet3.destroy();
+            planetCount -= 1;
+        }
+    }
+
+    collectStardust(stardust) {
         stardust.reset(); //only resetting it to mess with alpha and such with timer in the Prefab for Stardust
-        life += 1;
+        if (life != 15){
+            life += 1;
+        }
+        console.log("gathered dust");
+        console.log(life);
         // score add and repaint
         this.p1Score += stardust.points;
         this.scoreLeft.text = this.p1Score;
         this.sound.play('sfx_explosion'); 
-      }
+    }
+
+    addPlanet() {
+        if (planetCount == 0){
+            this.planet1 = new Planet(this, this.sun.x, this.sun.y, 'planet1', 0, -2).setOrigin(0.5, 0.5);
+            planetCount += 1;
+        } else if (planetCount == 1){
+            this.planet2 = new Planet(this, this.sun.x, this.sun.y, 'planet2', 0, -0.9).setOrigin(0.5, 0.5);
+            planetCount += 1;
+        } else if (planetCount == 2){
+            this.planet3 = new Planet(this, this.sun.x, this.sun.y, 'planet3', 0, -0.6).setOrigin(0.5, 0.5);
+            planetCount += 1;
+        }
+    }
 }
