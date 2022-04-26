@@ -29,6 +29,6 @@ class Stardust extends Phaser.GameObjects.Sprite{
     }
 
     randomY() {
-        return Phaser.Math.Between(borderPadding * 2, game.config.height - (borderPadding * 2));
+        return Phaser.Math.Between(borderPadding * 3, game.config.height - (borderPadding * 4));
     }
 }

@@ -1,7 +1,7 @@
 let config = {
     type: Phaser.CANVAS,
-    width: 1600,
-    height: 900,
+    width: window.innerWidth,
+    height: window.innerHeight,
     autoCenter: true, //this centers the game in the window
     scene: [Menu, Play]
 }
