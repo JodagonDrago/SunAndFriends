@@ -35,7 +35,7 @@ class Play extends Phaser.Scene{
         this.asteroid02 = new Asteroid(this, game.config.width + borderUISize*3, borderUISize*5 + borderPadding*2, 'asteroid', 0, 20).setOrigin(0,0);
         this.asteroid03 = new Asteroid(this, game.config.width, borderUISize*6 + borderPadding*4, 'asteroid', 0, 10).setOrigin(0,0);
         
-        // Add stardust FIXME
+        // Add stardust
         this.stardust01 = new Stardust(this, game.config.width, game.config.height/2, 'stardust', 0, 20).setOrigin(0,0);
 
         // define keys
@@ -72,7 +72,6 @@ class Play extends Phaser.Scene{
 
         // Initialize progress bar for stardust
         this.healthBar = this.makeBar(140,100,0x2ecc71);
-        this.setValue(this.healthBar, 0);
 
         // initialize player life and planets
         life = 1;
@@ -170,10 +169,12 @@ class Play extends Phaser.Scene{
 
     hitAsteroid(asteroid) {
         this.asteroidExplode(asteroid);
-        life -= 5; //damage to player (should equal increment when planets appear)
 
-        // Update health bar
-        this.setValue(this.healthBar, life);
+        // Reset progress bar
+        this.healthBar.destroy();
+        this.healthBar = this.makeBar(140,100,0x2ecc71);
+
+        life -= 5; //damage to player (should equal increment when planets appear)
 
         //kill a planet if there is one
         if (planetCount == 1){
@@ -216,6 +217,10 @@ class Play extends Phaser.Scene{
             this.planet3 = new Planet(this, this.sun.x, this.sun.y, 'planet3', 0, -0.6).setOrigin(0.5, 0.5);
             planetCount += 1;
         }
+
+        // Reset progress bar
+        this.healthBar.destroy();
+        this.healthBar = this.makeBar(140,100,0x2ecc71);
     }
 
     makeBar(x, y, color) {
@@ -224,9 +229,6 @@ class Play extends Phaser.Scene{
 
         //color the bar
         bar.fillStyle(color, 1);
-
-        //fill the bar with a rectangle
-        bar.fillRect(0, 0, 200, 50);
         
         //position the bar
         bar.x = x;
@@ -235,8 +237,12 @@ class Play extends Phaser.Scene{
         //return the bar
         return bar;
     }
-    setValue(bar,percentage) {
-        //scale the bar
-        bar.scaleX = percentage/15;
+    setValue(bar, life) {
+        // Calculate position of next bar based on health
+        let pos = (life / 5) * 30
+        
+        // Add another bar to the progress meter
+        console.log('Filled bar')
+        bar.fillRect(pos, 0, 20, 50);
     }
 }
