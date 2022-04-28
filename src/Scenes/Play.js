@@ -71,7 +71,7 @@ class Play extends Phaser.Scene{
         this.scoreLeft = this.add.text(borderPadding, borderPadding, this.p1Score, this.scoreConfig);
 
         // Initialize progress bar for stardust
-        this.healthBar = this.makeBar(140,100,0x2ecc71);
+        this.healthBar = new progressbar(this, 140,100,0x8e2d3f);
 
         // initialize player life and planets
         life = 1;
@@ -170,35 +170,46 @@ class Play extends Phaser.Scene{
     hitAsteroid(asteroid) {
         this.asteroidExplode(asteroid);
 
-        // Reset progress bar
-        this.healthBar.destroy();
-        this.healthBar = this.makeBar(140,100,0x2ecc71);
-
-        life -= 5; //damage to player (should equal increment when planets appear)
-
         //kill a planet if there is one
         if (planetCount == 1){
+            life = 1; // Reset progress towards next planet
             this.planet1.destroy();
             planetCount -= 1;
+
+            // Reset progress bar
+            this.healthBar.destroy();
+            this.healthBar = new progressbar(this, 140,100,0x8e2d3f);
         } else if (planetCount == 2){
+            life = 6; // Reset progress towards next planet
             this.planet2.destroy();
             planetCount -= 1;
+
+            // Reset progress bar
+            this.healthBar.destroy();
+            this.healthBar = new progressbar(this, 140,100,0x7a4fc2);
         } else if (planetCount == 3){
+            life = 11; // Reset progress towards next planet
             this.planet3.destroy();
             planetCount -= 1;
+
+            // Reset progress bar
+            this.healthBar.destroy();
+            this.healthBar = new progressbar(this, 140,100,0x65b691);
+        } else {
+            life = 0;
         }
     }
 
     collectStardust(stardust) {
         stardust.reset(); //only resetting it to mess with alpha and such with timer in the Prefab for Stardust
-        if (life != 15){
+        if (life < 16){
             life += 1;
         }
         console.log("gathered dust");
         console.log(life);
 
         // Increase progress bar
-        this.setValue(this.healthBar, life);
+        this.healthBar.setValue();
 
         // score add and repaint
         this.p1Score += stardust.points;
@@ -210,39 +221,23 @@ class Play extends Phaser.Scene{
         if (planetCount == 0){
             this.planet1 = new Planet(this, this.sun.x, this.sun.y, 'planet1', 0, -2).setOrigin(0.5, 0.5);
             planetCount += 1;
+            
+            // Reset progress bar
+            this.healthBar.destroy();
+            this.healthBar = new progressbar(this, 140,100,0x7a4fc2);
         } else if (planetCount == 1){
             this.planet2 = new Planet(this, this.sun.x, this.sun.y, 'planet2', 0, -0.9).setOrigin(0.5, 0.5);
             planetCount += 1;
+            
+            // Reset progress bar
+            this.healthBar.destroy();
+            this.healthBar = new progressbar(this, 140,100,0x65b691);
         } else if (planetCount == 2){
             this.planet3 = new Planet(this, this.sun.x, this.sun.y, 'planet3', 0, -0.6).setOrigin(0.5, 0.5);
             planetCount += 1;
+
+            // Reset progress bar
+            this.healthBar.destroy();
         }
-
-        // Reset progress bar
-        this.healthBar.destroy();
-        this.healthBar = this.makeBar(140,100,0x2ecc71);
-    }
-
-    makeBar(x, y, color) {
-        //draw the bar
-        let bar = this.add.graphics();
-
-        //color the bar
-        bar.fillStyle(color, 1);
-        
-        //position the bar
-        bar.x = x;
-        bar.y = y;
-
-        //return the bar
-        return bar;
-    }
-    setValue(bar, life) {
-        // Calculate position of next bar based on health
-        let pos = (life / 5) * 30
-        
-        // Add another bar to the progress meter
-        console.log('Filled bar')
-        bar.fillRect(pos, 0, 20, 50);
     }
 }
