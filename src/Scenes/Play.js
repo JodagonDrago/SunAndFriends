@@ -70,6 +70,10 @@ class Play extends Phaser.Scene{
         }
         this.scoreLeft = this.add.text(borderPadding, borderPadding, this.p1Score, this.scoreConfig);
 
+        // Initialize progress bar for stardust
+        this.healthBar = this.makeBar(140,100,0x2ecc71);
+        this.setValue(this.healthBar, 0);
+
         // initialize player life and planets
         life = 1;
         planetCount = 0;
@@ -168,6 +172,9 @@ class Play extends Phaser.Scene{
         this.asteroidExplode(asteroid);
         life -= 5; //damage to player (should equal increment when planets appear)
 
+        // Update health bar
+        this.setValue(this.healthBar, life);
+
         //kill a planet if there is one
         if (planetCount == 1){
             this.planet1.destroy();
@@ -188,6 +195,10 @@ class Play extends Phaser.Scene{
         }
         console.log("gathered dust");
         console.log(life);
+
+        // Increase progress bar
+        this.setValue(this.healthBar, life);
+
         // score add and repaint
         this.p1Score += stardust.points;
         this.scoreLeft.text = this.p1Score;
@@ -205,5 +216,27 @@ class Play extends Phaser.Scene{
             this.planet3 = new Planet(this, this.sun.x, this.sun.y, 'planet3', 0, -0.6).setOrigin(0.5, 0.5);
             planetCount += 1;
         }
+    }
+
+    makeBar(x, y, color) {
+        //draw the bar
+        let bar = this.add.graphics();
+
+        //color the bar
+        bar.fillStyle(color, 1);
+
+        //fill the bar with a rectangle
+        bar.fillRect(0, 0, 200, 50);
+        
+        //position the bar
+        bar.x = x;
+        bar.y = y;
+
+        //return the bar
+        return bar;
+    }
+    setValue(bar,percentage) {
+        //scale the bar
+        bar.scaleX = percentage/15;
     }
 }
