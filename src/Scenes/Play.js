@@ -71,7 +71,7 @@ class Play extends Phaser.Scene{
         this.scoreLeft = this.add.text(borderPadding, borderPadding, this.p1Score, this.scoreConfig);
 
         // Initialize progress bar for stardust
-        this.healthBar = new progressbar(this, 140,100,0x8e2d3f);
+        this.healthBar = new progressbar(this, borderPadding * 6, borderPadding, 0x8e2d3f);
 
         // initialize player life and planets
         life = 1;
@@ -178,7 +178,7 @@ class Play extends Phaser.Scene{
 
             // Reset progress bar
             this.healthBar.destroy();
-            this.healthBar = new progressbar(this, 140,100,0x8e2d3f);
+            this.healthBar = new progressbar(this, borderPadding * 6, borderPadding, 0x8e2d3f);
         } else if (planetCount == 2){
             life = 6; // Reset progress towards next planet
             this.planet2.destroy();
@@ -186,7 +186,7 @@ class Play extends Phaser.Scene{
 
             // Reset progress bar
             this.healthBar.destroy();
-            this.healthBar = new progressbar(this, 140,100,0x7a4fc2);
+            this.healthBar = new progressbar(this, borderPadding * 6, borderPadding, 0x7a4fc2);
         } else if (planetCount == 3){
             life = 11; // Reset progress towards next planet
             this.planet3.destroy();
@@ -194,7 +194,7 @@ class Play extends Phaser.Scene{
 
             // Reset progress bar
             this.healthBar.destroy();
-            this.healthBar = new progressbar(this, 140,100,0x65b691);
+            this.healthBar = new progressbar(this, borderPadding * 6, borderPadding, 0x65b691);
         } else {
             life = 0;
         }
@@ -224,14 +224,14 @@ class Play extends Phaser.Scene{
             
             // Reset progress bar
             this.healthBar.destroy();
-            this.healthBar = new progressbar(this, 140,100,0x7a4fc2);
+            this.healthBar = new progressbar(this, borderPadding * 6, borderPadding, 0x7a4fc2);
         } else if (planetCount == 1){
             this.planet2 = new Planet(this, this.sun.x, this.sun.y, 'planet2', 0, -0.9).setOrigin(0.5, 0.5);
             planetCount += 1;
             
             // Reset progress bar
             this.healthBar.destroy();
-            this.healthBar = new progressbar(this, 140,100,0x65b691);
+            this.healthBar = new progressbar(this, borderPadding * 6, borderPadding, 0x65b691);
         } else if (planetCount == 2){
             this.planet3 = new Planet(this, this.sun.x, this.sun.y, 'planet3', 0, -0.6).setOrigin(0.5, 0.5);
             planetCount += 1;
