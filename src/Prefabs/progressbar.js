@@ -22,10 +22,15 @@ class progressbar {
     setValue() {
         // Calculate position of next bar based on health
         let pos = this.count * 30
+
+        // Increment how many bars are on screen
         this.count += 1;
+
+        // Calculate height of bars based on border padding
+        let height = borderUISize / 2
         
         // Add another bar to the progress meter
         console.log('Filled bar')
-        this.bar.fillRect(pos, 0, 20, 50);
+        this.bar.fillRect(pos, 0, 20, height);
     }
 }
