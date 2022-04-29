@@ -98,7 +98,7 @@ class Play extends Phaser.Scene{
             this.scene.start("menuScene");
         }
 
-        this.starfield.tilePositionX -= 4;
+        this.starfield.tilePositionX += 4;
 
         if (!this.gameOver){
             // update sun sprite
