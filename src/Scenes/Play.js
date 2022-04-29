@@ -5,7 +5,7 @@ class Play extends Phaser.Scene{
 
     preload() {
         // load images/tile sprites
-        this.load.image('sun', './assets/sun.png'); //this will need to be changed when the sun asset is made
+        this.load.image('sun', './assets/sun.png'); 
         this.load.image('asteroid', './assets/asteroid.png');
         this.load.image('stardust', './assets/stardust.png');
         this.load.image('starfield', './assets/starfield.png');
