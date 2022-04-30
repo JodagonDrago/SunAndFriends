@@ -22,6 +22,7 @@ class Asteroid extends Phaser.GameObjects.Sprite{
 
     //reset position
     reset(){
+        this.moveSpeed = game.settings.asteroidSpeed; // Check for speed increase on reset
         this.x = game.config.width;
         this.y = this.randomY()
     }

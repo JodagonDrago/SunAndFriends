@@ -85,14 +85,19 @@ class Play extends Phaser.Scene{
         this.scoreConfig.fixedWidth = 0;
 
         // Start timers for difficulty stages
-        this.time.delayedCall(30000, ()=> {
+        this.time.delayedCall(30000, ()=> { // Stage 2: Add another ship
             console.log('diff increase');
             this.difficulty = 2
         }, null, this);
 
-        this.time.delayedCall(90000, ()=> {
+        this.time.delayedCall(90000, ()=> { // Stage 3: Add another ship
             console.log('diff increase');
             this.difficulty = 3
+        }, null, this);
+
+        this.time.delayedCall(120000, ()=> { // Stage 4: increase ship movement speed
+            console.log('speed increase');
+            game.settings.asteroidSpeed += 4;
         }, null, this);
     }
 
