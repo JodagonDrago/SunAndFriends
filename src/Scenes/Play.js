@@ -12,6 +12,7 @@ class Play extends Phaser.Scene{
         this.load.image('planet1', './assets/planet1.png');
         this.load.image('planet2', './assets/planet2.png');
         this.load.image('planet3', './assets/planet3.png');
+        this.load.image('parallax', './assets/parallax.png')
 
         // load spritesheet
         this.load.spritesheet('explosion', './assets/explosion.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9});
@@ -20,6 +21,7 @@ class Play extends Phaser.Scene{
     create(){
         // place tile sprite
         this.starfield = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'starfield').setOrigin(0, 0);
+        //this.parallax = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'parallax').setOrigin(0, 0); //see notes further down for why this is commented out
     
         // white borders
         this.add.rectangle(0, 0, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0, 0);
@@ -98,7 +100,8 @@ class Play extends Phaser.Scene{
             this.scene.start("menuScene");
         }
 
-        this.starfield.tilePositionX += 4;
+        this.starfield.tilePositionX += 4; //I'm not sure what speed to set these 2 to make the parallax scrolling effect work but everything is set up to make it happen :)
+        //this.parallax.tilePositionX += 3; //Also it's commented out so that it is here so yall can choose to remove it if you want. But it does work :)
 
         if (!this.gameOver){
             // update sun sprite

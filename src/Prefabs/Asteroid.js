@@ -14,7 +14,7 @@ class Asteroid extends Phaser.GameObjects.Sprite{
         if(this.x <= 0 - this.width){
             this.x = game.config.width;
             this.y = this.randomY()
-        }
+        } 
     }
 
     //reset position
