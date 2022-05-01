@@ -21,13 +21,8 @@ class Play extends Phaser.Scene{
     create(){
         // place tile sprite
         this.starfield = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'starfield').setOrigin(0, 0);
-        //this.parallax = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'parallax').setOrigin(0, 0); //see notes further down for why this is commented out
+        this.parallax = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'parallax').setOrigin(0, 0);
     
-        // white borders
-        this.add.rectangle(0, 0, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0, 0);
-        this.add.rectangle(0, game.config.height - borderUISize, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0, 0);
-        this.add.rectangle(0, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0, 0);
-        this.add.rectangle(game.config.width - borderUISize, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0, 0);
     
         // add sun (p1)
         this.sun = new Sun(this, game.config.width/2, game.config.height/2, 'sun').setOrigin(0.5, 0.5);
@@ -41,6 +36,12 @@ class Play extends Phaser.Scene{
         
         // Add stardust
         this.stardust01 = new Stardust(this, game.config.width, game.config.height/2, 'stardust', 0, 20).setOrigin(0,0);
+
+        // white borders
+        this.add.rectangle(0, 0, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0, 0);
+        this.add.rectangle(0, game.config.height - borderUISize, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0, 0);
+        this.add.rectangle(0, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0, 0);
+        this.add.rectangle(game.config.width - borderUISize, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0, 0);
 
         // define keys
         keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
@@ -119,8 +120,8 @@ class Play extends Phaser.Scene{
             this.scene.start("menuScene");
         }
 
-        this.starfield.tilePositionX += 4; //I'm not sure what speed to set these 2 to make the parallax scrolling effect work but everything is set up to make it happen :)
-        //this.parallax.tilePositionX += 3; //Also it's commented out so that it is here so yall can choose to remove it if you want. But it does work :)
+        this.starfield.tilePositionX += 3;
+        this.parallax.tilePositionX += 4; 
 
         if (!this.gameOver){
             // update sun sprite
@@ -247,7 +248,7 @@ class Play extends Phaser.Scene{
         // score add and repaint
         this.p1Score += stardust.points;
         this.scoreLeft.text = this.p1Score;
-        this.sound.play('sfx_explosion'); 
+        this.sound.play('sfx_dust'); 
     }
 
     addPlanet() {
