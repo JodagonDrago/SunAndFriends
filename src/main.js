@@ -1,3 +1,15 @@
+//Collaborators:
+//Joseph Squires, Syvan Novom, Aaron Gonzales
+
+//Game title:
+//Sun and Friends
+
+//Completed: 5/1/2022
+
+//Creative Tilt:
+//Technically Interesting: Added bodies that share a prefab to follow the player and rotate about the player at various speeds to visually make a solar system, and mechanicly serve as earnable lives
+//Visual Style: We implemented paralax movement in the scrolling stars, as well as 'friends' orbitting bodies around the sun
+
 let config = {
     type: Phaser.CANVAS,
     width: window.innerWidth,
@@ -16,7 +28,3 @@ let life, planetCount, music, musicOff;
 //set UI sizes
 let borderUISize = game.config.height / 15;
 let borderPadding = borderUISize / 3;
-
-//Creative Tilt:
-//Technically Interesting: Added bodies that follow the player and rotate about the player at various speeds to make a solar system, and also serve as earnable lives
-//Visual Style: We implemented paralax movement in the scrolling stars, as well as 'friends' orbitting bodies around the sun
