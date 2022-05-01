@@ -21,13 +21,8 @@ class Play extends Phaser.Scene{
     create(){
         // place tile sprite
         this.starfield = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'starfield').setOrigin(0, 0);
-        //this.parallax = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'parallax').setOrigin(0, 0); //see notes further down for why this is commented out
+        this.parallax = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'parallax').setOrigin(0, 0);
     
-        // white borders
-        this.add.rectangle(0, 0, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0, 0);
-        this.add.rectangle(0, game.config.height - borderUISize, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0, 0);
-        this.add.rectangle(0, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0, 0);
-        this.add.rectangle(game.config.width - borderUISize, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0, 0);
     
         // add sun (p1)
         this.sun = new Sun(this, game.config.width/2, game.config.height/2, 'sun').setOrigin(0.5, 0.5);
@@ -36,9 +31,17 @@ class Play extends Phaser.Scene{
         this.asteroid01 = new Asteroid(this, game.config.width + borderUISize*6, borderUISize*4, 'asteroid', 0, 30).setOrigin(0, 0);
         this.asteroid02 = new Asteroid(this, game.config.width + borderUISize*3, borderUISize*5 + borderPadding*2, 'asteroid', 0, 20).setOrigin(0,0);
         this.asteroid03 = new Asteroid(this, game.config.width, borderUISize*6 + borderPadding*4, 'asteroid', 0, 10).setOrigin(0,0);
+        this.asteroid04 = new Asteroid(this, game.config.width, borderUISize*6 + borderPadding*4, 'asteroid', 0, 10).setOrigin(0,0);
+        this.asteroid05 = new Asteroid(this, game.config.width, borderUISize*6 + borderPadding*4, 'asteroid', 0, 10).setOrigin(0,0);
         
         // Add stardust
         this.stardust01 = new Stardust(this, game.config.width, game.config.height/2, 'stardust', 0, 20).setOrigin(0,0);
+
+        // white borders
+        this.add.rectangle(0, 0, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0, 0);
+        this.add.rectangle(0, game.config.height - borderUISize, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0, 0);
+        this.add.rectangle(0, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0, 0);
+        this.add.rectangle(game.config.width - borderUISize, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0, 0);
 
         // define keys
         keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
@@ -75,13 +78,30 @@ class Play extends Phaser.Scene{
         // Initialize progress bar for stardust
         this.healthBar = new progressbar(this, borderPadding * 6, borderPadding, 0x8e2d3f);
 
-        // initialize player life and planets
+        // initialize player life, planets and difficulty check
         life = 1;
         planetCount = 0;
+        this.difficulty = 0;
 
         //Game Over flag
         this.gameOver  = false;
         this.scoreConfig.fixedWidth = 0;
+
+        // Start timers for difficulty stages
+        this.time.delayedCall(30000, ()=> { // Stage 2: Add another ship
+            console.log('diff increase');
+            this.difficulty = 2
+        }, null, this);
+
+        this.time.delayedCall(90000, ()=> { // Stage 3: Add another ship
+            console.log('diff increase');
+            this.difficulty = 3
+        }, null, this);
+
+        this.time.delayedCall(120000, ()=> { // Stage 4: increase ship movement speed
+            console.log('speed increase');
+            game.settings.asteroidSpeed += 4;
+        }, null, this);
     }
 
     update() {
@@ -100,8 +120,8 @@ class Play extends Phaser.Scene{
             this.scene.start("menuScene");
         }
 
-        this.starfield.tilePositionX += 4; //I'm not sure what speed to set these 2 to make the parallax scrolling effect work but everything is set up to make it happen :)
-        //this.parallax.tilePositionX += 3; //Also it's commented out so that it is here so yall can choose to remove it if you want. But it does work :)
+        this.starfield.tilePositionX += 3;
+        this.parallax.tilePositionX += 4; 
 
         if (!this.gameOver){
             // update sun sprite
@@ -110,6 +130,17 @@ class Play extends Phaser.Scene{
             this.asteroid01.update();
             this.asteroid02.update();
             this.asteroid03.update();
+
+            // Add 4th asteroid if play time reaches 30 seconds
+            if (this.difficulty >= 2) {
+                this.asteroid04.update();
+            }
+
+            // Add 5th asteroid if play time reaches 1:30 seconds
+            if (this.difficulty >= 3) {
+                this.asteroid05.update();
+            }
+
             // Update stardust
             this.stardust01.update();
             // update any planets
@@ -217,7 +248,7 @@ class Play extends Phaser.Scene{
         // score add and repaint
         this.p1Score += stardust.points;
         this.scoreLeft.text = this.p1Score;
-        this.sound.play('sfx_explosion'); 
+        this.sound.play('sfx_dust'); 
     }
 
     addPlanet() {
