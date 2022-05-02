@@ -10,29 +10,15 @@ class Menu extends Phaser.Scene{
         this.load.audio('sfx_rocket', './assets/assets_rocket_shot.wav');
         this.load.audio('sfx_dust', './assets/assets_collect.wav');
         this.load.audio('music', './assets/space_track.wav');
+        this.load.image('titlecard', './assets/title.png')
     }
 
     create(){
-        //menu text configuration
-        let menuConfig = {
-            fontFamily: 'Comic Sans MS',
-            fontSize: '72px',
-            backgroundColor: '#fcba03',
-            color: '#000000',
-            align: 'right',
-            padding: {
-                top: 5,
-                bottom: 5,
-            },
-            fixedWidth: 0
-        }
 
-        this.add.text(game.config.width/2, game.config.height/2.5 - borderUISize - borderPadding, 'Sun and Friends', menuConfig).setOrigin(0.5);
-        menuConfig.backgroundColor = '#000000';
-        menuConfig.color = '#fcba03';
-        menuConfig.fontSize = '28px';
-        this.add.text(game.config.width/2, game.config.height/2, 'Press T for tutorial', menuConfig).setOrigin(0.5);
-        this.add.text(game.config.width/2, game.config.height/2 + borderUISize + borderPadding, 'Press ← for Novice or → for Expert', menuConfig).setOrigin(0.5);
+        let title = this.add.image(game.config.width/2, game.config.height/2, 'titlecard')
+        title.displayHeight = game.config.height;
+        title.displayWidth = game.config.width;
+        title.scaleY = title.scaleX
 
         // define keys
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
