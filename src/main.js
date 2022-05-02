@@ -6,7 +6,8 @@
 
 //Completed: 5/1/2022
 
-//Creative Tilt:
+//Creative Tilt: Our game incorporates unique movement that acheives our experience goals. We wanted the player to feel like a lonely sun floating through space which is why we added floaty 8-directional
+// movement and a generally lonely looking environment. As the player collects stardust, they create friends to make their endless trek through space a little less lonely.
 //Technically Interesting: Added bodies that share a prefab to follow the player and rotate about the player at various speeds to visually make a solar system, and mechanicly serve as earnable lives
 //Visual Style: We implemented paralax movement in the scrolling stars, as well as 'friends' orbitting bodies around the sun
 
